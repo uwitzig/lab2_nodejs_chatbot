@@ -1,0 +1,12 @@
+{
+  "name": "lab2_nodejs_chatbot",
+  "version": "1.0.0",
+  "description": "A simple Node.js chatbot with Watson Assistant",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Urs Witzig",
+  "license": "ISC"
+}

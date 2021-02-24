@@ -1,0 +1,6 @@
+applications:
+- name: xxx-Lab02_node.js_Chatbot
+  path: .
+  buildpack: sdk-for-nodejs
+  command: node app.js
+  memory: 256M

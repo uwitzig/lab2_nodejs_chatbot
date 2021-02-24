@@ -1,0 +1,236 @@
+*********** Step 4 package.json *****************
+{
+  "name": "lab2_nodejs_chatbot",
+  "version": "1.0.0",
+  "description": "A simple Node.js chatbot with Watson Assistant",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Urs Witzig",
+  "license": "ISC"
+}
+***********************************
+******** Step 8 config.js *****************
+var config = { 
+  watson: {
+    assistant: { 
+      iam_apikey: "<yourApiKey>", 
+      version: "2019-02-28",
+      url: "yourServiceUrl",
+      assistantId: "<yourAssistantId>" 
+    } 
+  } 
+}; 
+module.exports = config;
+***********************************
+******** Step 10 app.js *****************
+const path = require('path');
+
+const express = require('express');
+const bodyParser = require('body-parser');
+const logger = require('morgan');
+
+const app = express();
+app.use(bodyParser.json({ limit: '1mb' }));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(logger('dev'));
+
+const port = process.env.PORT || 3000;
+app.set('view engine', 'ejs');
+app.set('views', 'views');
+
+const watsonRoutes = require('./routes/watson');
+app.use(watsonRoutes);
+
+app.use(function (requst, response) {
+  response.status(404).render("404");
+});
+
+app.listen(port, () => {
+  console.log('Express app started on port ' + port);
+})
+***********************************
+******** Step 11 routes/watson.js *****************
+const express = require('express');
+
+const watsonController = require('../controllers/watson');
+
+const router = express.Router();
+
+router.get('/', watsonController.getIndex);
+
+router.post('/', watsonController.postMessage);
+
+module.exports = router;
+*************************************
+********* Step 12 controllers/watson.js *****************
+const AssistantV2 = require('ibm-watson/assistant/v2');
+const { IamAuthenticator } = require('ibm-watson/auth');
+const config = require('../config');
+
+const watsonAssistant = new AssistantV2({
+    version: config.watson.assistant.version,
+    authenticator: new IamAuthenticator({
+        apikey: config.watson.assistant.iam_apikey
+    }),
+    url: config.watson.assistant.url
+});
+
+let assistantSessionId = null;
+
+exports.getIndex = (req, res, next) => {
+    watsonAssistant.createSession({
+        assistantId: config.watson.assistant.assistantId
+    })
+    .then(result => {
+        assistantSessionId = result.result.session_id,
+        res.render('index');
+    })
+    .catch(err => {
+        console.log(err);
+    })
+}
+
+exports.postMessage = (req, res, next) => {
+    let text = "";
+    if (req.body.input) {
+        text = req.body.input.text;
+    }
+    watsonAssistant.message({
+        assistantId: config.watson.assistant.assistantId,
+        sessionId: assistantSessionId,
+        input: {
+            'message_type': 'text',
+            'text': text
+        }
+})
+.then(result => {
+    console.log(JSON.stringify(result, null, 2));
+    res.json(result); // just returns what is received from assistant
+})
+.catch(err => {
+    console.log(err);
+})
+}
+******************************************************
+***************** Step 14 views/header.ejs **************************
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Chatbot Challenge Lab 2</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel='stylesheet' href='/stylesheets/styles.css' /> 
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script src="/js/scripts.js"></script>
+  </head>
+  <body onLoad="init()"> 
+    <div class="container" style="text-align: center"><body class="container">
+      <div class="row"><div class="col-md-12"><p><h2>Chatbot Challenge Lab 2</h2></p></div></div>
+**********************************************************************
+******** Step 15 views/footer.ejs *****************
+    <p><small>IBM Chatbot Challenge – 2021</small></p>
+  </body>
+</html>
+***********************************
+******** Step 16 views/404.ejs *****************
+<% include header %>
+<h2>404! Page not found.</h2>
+<% include footer %>
+***********************************
+******** Step 117 *****************
+<% include header %>
+<p/>
+<div class="row">
+  <div class="col-md-3"></div>
+  <div class="input-group col-md-6">
+   <input type="text" id="text" name="text" class="form-control" placeholder="Enter text sent to Chatbot">
+    <span class="input-group-btn">
+      <button class="btn btn-primary" onclick="sendMessage()" >Send</button>
+    </span>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-3"></div>
+  <div class="col-md-6 mt-2">
+    <div><b>Conversation History:</b></div> 
+    <div id="history" class="form-control col text-left" ></div> 
+  </div>
+</div>
+<% include footer %>
+***********************************
+***********************************
+******** Step 20 public/stylesheets/styles.css *****************
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+.form-control {
+  margin-right: 5px;
+}
+***********************************
+******** Step 21 public/js/script.js *****************
+var context = {};
+
+function updateChatLog(user, message) {
+  if (message) { 
+    var div = document.createElement("div"); 
+    div.innerHTML = "<b>" + user + "</b>: " + message;
+    document.getElementById("history").appendChild(div); 
+    document.getElementById("text").value = ""; 
+  } 
+}
+
+function sendMessage() { 
+  var text = document.getElementById("text").value; 
+  updateChatLog("You", text); 
+  var payload = {}; 
+  if (text) { 
+    payload.input = {"text": text};
+  };
+  if (context) {
+    payload.context = context;
+  }; 
+  var xhr = new XMLHttpRequest(); 
+  xhr.onreadystatechange = function() {
+      if (xhr.readyState == 4) {
+        if (xhr.status == 200) { 
+        var json = JSON.parse(xhr.responseText); 
+        context = json.context;
+          updateChatLog("Watson", json.result.output.generic[0].text); 
+      }
+    }
+  }
+  xhr.open("POST", "./", true);
+  xhr.setRequestHeader("Content-type", "application/json");
+  xhr.send(JSON.stringify(payload)); 
+}
+
+function init() {
+    document.getElementById("text").addEventListener("keydown", function(e) {
+      if (!e) {
+        var e = window.event;
+      }
+      if (e.keyCode == 13) {
+        sendMessage();
+      } 
+    }, 
+    false); 
+  sendMessage(); 
+} 
+***********************************
+*********** Step 28 manifest.yml *******************
+applications:
+- name: xxx-Lab02_node.js_Chatbot
+  path: .
+  buildpack: sdk-for-nodejs
+  command: node app.js
+  memory: 256M
+****************************************************
