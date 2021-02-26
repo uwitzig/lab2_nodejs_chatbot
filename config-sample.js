@@ -2,7 +2,7 @@ var config = {
     watson: {
       assistant: { 
         iam_apikey: "<yourApiKey>", 
-        version: "2019-02-28",
+        version: "2020-09-24",
         url: "yourServiceUrl",
         assistantId: "<yourAssistantId>" 
       } 
