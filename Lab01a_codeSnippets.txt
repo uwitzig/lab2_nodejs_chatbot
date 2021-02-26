@@ -3,7 +3,6 @@ https://<Your Legacy v1 workspace URL>?version=2020-04-01
 
 {"input": 
     {"text": ""},
-    "context": {
-    
+    "context": {   
     }
 }
