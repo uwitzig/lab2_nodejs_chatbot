@@ -6,3 +6,12 @@ https://<Your Legacy v1 workspace URL>?version=2020-04-01
     "context": {   
     }
 }
+******** Step 5 *****************
+https://<Your Legacy v1 workspace URL>?version=2020-04-01
+
+{"input": 
+    {"text": "turn on the lights"},
+    "context": {  
+    ENTER HERE THE CONTEXT FROM THE PREVIOUS STEP
+    }
+}
