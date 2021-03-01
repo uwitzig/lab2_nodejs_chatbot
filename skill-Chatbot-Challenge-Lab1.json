@@ -1,33 +1,6 @@
 {
   "intents": [
     {
-      "intent": "book_table",
-      "examples": [
-        {
-          "text": "Can 3 of us get a table for lunch?"
-        },
-        {
-          "text": "Can I reserve a table?"
-        },
-        {
-          "text": "Do you have openings for next Wednesday at 7?"
-        },
-        {
-          "text": "I'd like to come in for brunch tomorrow"
-        },
-        {
-          "text": "I’d like to make a reservation"
-        },
-        {
-          "text": "Is there availability for 4 on Tuesday night?"
-        },
-        {
-          "text": "I want to reserve a table for dinner"
-        }
-      ],
-      "description": "Book a table in one of the restaurants"
-    },
-    {
       "intent": "goodbye",
       "examples": [
         {
@@ -41,9 +14,6 @@
         },
         {
           "text": "I am leaving"
-        },
-        {
-          "text": "See you"
         },
         {
           "text": "See you later"
@@ -70,10 +40,10 @@
           "text": "Howdy"
         }
       ],
-      "description": "Greeting for App"
+      "description": "Greeting for app"
     },
     {
-      "intent": "help-misc",
+      "intent": "Help-Misc",
       "examples": [
         {
           "text": "I have a problem"
@@ -88,7 +58,7 @@
           "text": "I need information"
         },
         {
-          "text": "I would like some assistance"
+          "text": "I need some assistance"
         }
       ],
       "description": "Help"
@@ -98,6 +68,9 @@
       "examples": [
         {
           "text": "Arm the security system"
+        },
+        {
+          "text": "headlights"
         },
         {
           "text": "I need lights"
@@ -146,8 +119,7 @@
           "type": "synonyms",
           "value": "security system",
           "synonyms": [
-            "alarm",
-            "security"
+            "alarm"
           ]
         }
       ],
@@ -163,7 +135,7 @@
             "clock",
             "hour",
             "minute",
-            "seconds"
+            "second"
           ]
         }
       ],
@@ -192,7 +164,7 @@
           "type": "synonyms",
           "value": "low beam",
           "synonyms": [
-            "dim lights",
+            "dim light",
             "headlights",
             "passing lights"
           ]
@@ -214,13 +186,6 @@
       "minor_version": "2018-11-08"
     }
   },
-  "webhooks": [
-    {
-      "url": "",
-      "name": "main_webhook",
-      "headers": []
-    }
-  ],
   "dialog_nodes": [
     {
       "type": "standard",
@@ -246,96 +211,19 @@
       },
       "conditions": "anything_else",
       "dialog_node": "Anything else",
-      "previous_sibling": "node_8_1613999801109",
+      "previous_sibling": "node_6_1614597184315",
       "disambiguation_opt_out": true
     },
     {
       "type": "standard",
       "title": "Device",
-      "parent": "node_2_1613999880457",
+      "parent": "node_3_1614597260912",
       "next_step": {
-        "behavior": "jump_to",
-        "selector": "condition",
-        "dialog_node": "node_4_1614004252112"
+        "behavior": "skip_user_input"
       },
       "conditions": "@device",
-      "dialog_node": "node_10_1614004184353",
-      "previous_sibling": "node_2_1614000026916"
-    },
-    {
-      "type": "standard",
-      "title": "Light On",
-      "output": {
-        "generic": [
-          {
-            "values": [
-              {
-                "text": "OK! Turning on @lights light."
-              }
-            ],
-            "response_type": "text",
-            "selection_policy": "sequential"
-          }
-        ]
-      },
-      "parent": "node_2_1614000026916",
-      "conditions": "@lights",
-      "dialog_node": "node_1_1614000198806"
-    },
-    {
-      "type": "standard",
-      "title": "Additional Help",
-      "output": {
-        "generic": [
-          {
-            "values": [
-              {
-                "text": "I’m sorry, I can’t help with that. For additional help, please call 555-2368."
-              }
-            ],
-            "response_type": "text",
-            "selection_policy": "sequential"
-          }
-        ]
-      },
-      "parent": "node_2_1614008500586",
-      "conditions": "true",
-      "dialog_node": "node_1_1614008663574",
-      "previous_sibling": "node_9_1614008565773"
-    },
-    {
-      "type": "standard",
-      "context": {
-        "app_action": "on"
-      },
-      "next_step": {
-        "behavior": "jump_to",
-        "selector": "condition",
-        "dialog_node": "node_2_1614000026916"
-      },
-      "conditions": "#turn-on",
-      "dialog_node": "node_2_1613999880457",
-      "previous_sibling": "node_9_1613999734332"
-    },
-    {
-      "type": "standard",
-      "title": "Lights",
-      "output": {
-        "generic": [
-          {
-            "values": [
-              {
-                "text": "OK! Which light would you like to turn on?"
-              }
-            ],
-            "response_type": "text",
-            "selection_policy": "sequential"
-          }
-        ]
-      },
-      "parent": "node_2_1613999880457",
-      "conditions": "@device:lights",
-      "dialog_node": "node_2_1614000026916"
+      "dialog_node": "node_10_1614597732399",
+      "previous_sibling": "node_3_1614597317712"
     },
     {
       "type": "standard",
@@ -353,14 +241,84 @@
           }
         ]
       },
+      "conditions": "#Help-Misc",
+      "dialog_node": "node_1_1614600508715",
+      "previous_sibling": "node_3_1614597260912"
+    },
+    {
+      "type": "standard",
+      "title": "Time",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "The time will be provided by a Webhook in Lab 3."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_1_1614600508715",
+      "conditions": "@help:time",
+      "dialog_node": "node_1_1614600563619"
+    },
+    {
+      "type": "standard",
+      "title": "Hello",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Hi! What can i do for you?"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "conditions": "#hello",
+      "dialog_node": "node_2_1614597124178",
+      "previous_sibling": "Welcome"
+    },
+    {
+      "type": "standard",
+      "title": "Turn on",
+      "context": {
+        "app_action": "on"
+      },
       "next_step": {
         "behavior": "jump_to",
-        "selector": "user_input",
-        "dialog_node": "node_9_1614008565773"
+        "selector": "condition",
+        "dialog_node": "node_3_1614597317712"
       },
-      "conditions": "#help-misc",
-      "dialog_node": "node_2_1614008500586",
-      "previous_sibling": "node_2_1613999880457"
+      "conditions": "#turn-on",
+      "dialog_node": "node_3_1614597260912",
+      "previous_sibling": "node_2_1614597124178"
+    },
+    {
+      "type": "standard",
+      "title": "Lights",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "OK! Which light would you like to turn on?"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_3_1614597260912",
+      "conditions": "@device:lights",
+      "dialog_node": "node_3_1614597317712"
     },
     {
       "type": "standard",
@@ -378,14 +336,34 @@
           }
         ]
       },
-      "parent": "node_2_1614000026916",
+      "parent": "node_3_1614597317712",
       "conditions": "true",
-      "dialog_node": "node_3_1614000305648",
-      "previous_sibling": "node_1_1614000198806"
+      "dialog_node": "node_4_1614597585063",
+      "previous_sibling": "node_5_1614597492314"
     },
     {
       "type": "standard",
-      "title": "Invalid Device",
+      "title": "Light On",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "OK! Turning on @lights light."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_3_1614597317712",
+      "conditions": "@lights",
+      "dialog_node": "node_5_1614597492314"
+    },
+    {
+      "type": "standard",
+      "title": "Invalid device",
       "output": {
         "generic": [
           {
@@ -399,22 +377,10 @@
           }
         ]
       },
-      "parent": "node_2_1613999880457",
+      "parent": "node_3_1614597260912",
       "conditions": "true",
-      "dialog_node": "node_3_1614007488848",
-      "previous_sibling": "node_10_1614004184353"
-    },
-    {
-      "type": "standard",
-      "title": "Device On Off Check",
-      "parent": "node_10_1614004184353",
-      "metadata": {
-        "_customization": {
-          "mcr": true
-        }
-      },
-      "conditions": "true",
-      "dialog_node": "node_4_1614004252112"
+      "dialog_node": "node_5_1614598215580",
+      "previous_sibling": "node_10_1614597732399"
     },
     {
       "type": "standard",
@@ -424,7 +390,7 @@
           {
             "values": [
               {
-                "text": "Until our next meeting!"
+                "text": "Until our next meeting"
               }
             ],
             "response_type": "text",
@@ -433,38 +399,30 @@
         ]
       },
       "conditions": "#goodbye",
-      "dialog_node": "node_8_1613999801109",
-      "previous_sibling": "node_2_1614008500586"
+      "dialog_node": "node_6_1614597184315",
+      "previous_sibling": "node_1_1614600508715"
     },
     {
       "type": "standard",
-      "title": "Hello",
-      "output": {
-        "generic": [
-          {
-            "values": [
-              {
-                "text": "Hi! What can I do for you?"
-              }
-            ],
-            "response_type": "text",
-            "selection_policy": "sequential"
-          }
-        ]
+      "title": "Device On Off Check",
+      "parent": "node_10_1614597732399",
+      "metadata": {
+        "_customization": {
+          "mcr": true
+        }
       },
-      "conditions": "#hello",
-      "dialog_node": "node_9_1613999734332",
-      "previous_sibling": "Welcome"
+      "conditions": "true",
+      "dialog_node": "node_9_1614597777392"
     },
     {
       "type": "standard",
-      "title": "Time",
+      "title": "Additional help",
       "output": {
         "generic": [
           {
             "values": [
               {
-                "text": "The time will be provided by the server created later in this tutorial."
+                "text": "I’m sorry, I can’t help with that. For additional help, please call 555-2368."
               }
             ],
             "response_type": "text",
@@ -472,51 +430,10 @@
           }
         ]
       },
-      "parent": "node_2_1614008500586",
-      "conditions": "@help:time",
-      "dialog_node": "node_9_1614008565773"
-    },
-    {
-      "type": "response_condition",
-      "output": {
-        "generic": [
-          {
-            "values": [
-              {
-                "text": "I’ll turn on the @device for you."
-              }
-            ],
-            "response_type": "text",
-            "selection_policy": "sequential"
-          }
-        ]
-      },
-      "parent": "node_4_1614004252112",
-      "context": {
-        "Alarmonoff": "on"
-      },
-      "conditions": "@device:(security system) && $app_action==\"on\"",
-      "dialog_node": "response_10_1614007162895",
-      "previous_sibling": "response_7_1614004533964"
-    },
-    {
-      "type": "response_condition",
-      "output": {
-        "generic": [
-          {
-            "values": [
-              {
-                "text": "It looks like the  @device is already on."
-              }
-            ],
-            "response_type": "text",
-            "selection_policy": "sequential"
-          }
-        ]
-      },
-      "parent": "node_4_1614004252112",
-      "conditions": "@device:(security system) &&  $app_action==\"on\" && $Alarmonoff==\"on\"",
-      "dialog_node": "response_7_1614004533964"
+      "parent": "node_1_1614600508715",
+      "conditions": "true",
+      "dialog_node": "node_9_1614600718212",
+      "previous_sibling": "node_1_1614600563619"
     },
     {
       "type": "response_condition",
@@ -533,10 +450,72 @@
           }
         ]
       },
-      "parent": "node_4_1614004252112",
+      "parent": "node_9_1614597777392",
       "conditions": "@device && $app_action==\"on\"",
-      "dialog_node": "response_7_1614007339804",
-      "previous_sibling": "response_10_1614007162895"
+      "dialog_node": "response_2_1614598091269",
+      "previous_sibling": "response_5_1614597959596"
+    },
+    {
+      "type": "response_condition",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "I’ll turn on the @device for you."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_9_1614597777392",
+      "context": {
+        "Alarmonoff": "on"
+      },
+      "conditions": "@device:(security system) && $app_action==\"on\"",
+      "dialog_node": "response_5_1614597959596",
+      "previous_sibling": "response_7_1614597824505"
+    },
+    {
+      "type": "response_condition",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "It looks like the @device is already on."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_9_1614597777392",
+      "conditions": "@device:(security system) &&  $app_action==\"on\" && $Alarmonoff==\"on\"",
+      "dialog_node": "response_7_1614597824505"
+    },
+    {
+      "type": "response_condition",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Device is @device, app_action is $app_action and Alarmonoff is $Alarmonoff"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_9_1614597777392",
+      "conditions": "true",
+      "dialog_node": "response_8_1614599138944",
+      "previous_sibling": "response_2_1614598091269"
     },
     {
       "type": "standard",
@@ -589,5 +568,5 @@
   "learning_opt_out": false,
   "name": "Chatbot Challenge Lab1",
   "language": "en",
-  "description": "Chatbot Challeenge Lab1"
+  "description": "Example dialog skill"
 }
