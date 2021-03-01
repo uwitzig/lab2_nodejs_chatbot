@@ -8,30 +8,30 @@ function main(params) {
 
 	return { message: msg };
 }
-******************* Step 16 ********************
+******************* Step 17 ********************
 ibmcloud login -r eu-gb
 ibmcloud target --cf
 
-******************* Step 17 ********************
+******************* Step 18 ********************
 ibmcloud target -g Default
 
-******************* Step 18 ********************
+******************* Step 19 ********************
 ibmcloud resource service-instance-create workshopDb cloudantnosqldb lite <your region> -p '{"legacyCredentials": true}'
 valid regions: eu-gb, eu-de, us-south, etc
 
-******************* Step 19 ********************
+******************* Step 20 ********************
 ibmcloud resource service-alias-create cfworkshopdb --instance-name workshopDb
 
-******************* Step 20 ********************
+******************* Step 21 ********************
 ibmcloud cf create-service-key cfworkshopdb workshopkey
 
-******************* Step 23 ********************
+******************* Step 24 ********************
 ibmcloud plugin install cloud-functions
 
-******************* Step 24 ********************
+******************* Step 25 ********************
 ibmcloud wsk package refresh
 
-******************* Step 28 ********************
+******************* Step 29 ********************
 { 
       "doc": {
         "date": "2021-03-07",
@@ -42,7 +42,7 @@ ibmcloud wsk package refresh
     "dbname": "reservations"
 }
 
-******************* Step 34 ********************
+******************* Step 35 ********************
 {
   "output": {
     "generic": [
@@ -68,7 +68,7 @@ ibmcloud wsk package refresh
   }
 }
 
-******************* Step 36 ********************
+******************* Step 37 ********************
 {
   "output": {
     "generic": [
