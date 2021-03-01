@@ -1,0 +1,105 @@
+******************* Step 3 ********************
+function main(params) {
+    var nDate = new Date().toLocaleTimeString('en-US', {
+            timeZone: 'Europe/Zurich'
+    });
+    
+    var msg = 'The current time is ' + nDate;
+
+	return { message: msg };
+}
+******************* Step 16 ********************
+ibmcloud login -r eu-gb
+ibmcloud target --cf
+
+******************* Step 17 ********************
+ibmcloud target -g Default
+
+******************* Step 18 ********************
+ibmcloud resource service-instance-create workshopDb cloudantnosqldb lite <your region> -p '{"legacyCredentials": true}'
+valid regions: eu-gb, eu-de, us-south, etc
+
+******************* Step 19 ********************
+ibmcloud resource service-alias-create cfworkshopdb --instance-name workshopDb
+
+******************* Step 20 ********************
+ibmcloud cf create-service-key cfworkshopdb workshopkey
+
+******************* Step 23 ********************
+ibmcloud plugin install cloud-functions
+
+******************* Step 24 ********************
+ibmcloud wsk package refresh
+
+******************* Step 28 ********************
+{ 
+      "doc": {
+        "date": "2021-03-07",
+        "locations": "Main Street",
+        "number": 3,
+        "time": "12:00:00"
+      },
+    "dbname": "reservations"
+}
+
+******************* Step 34 ********************
+{
+  "output": {
+    "generic": [
+      {
+        "values": [
+          {
+            "text": "Welcome to Chatbot Challenge Lab!"
+          }
+        ],
+        "response_type": "text",
+        "selection_policy": "sequential"
+      }
+    ]
+  },
+  "context": {
+    "private": {
+      "my_credentials": {
+        "api_key": "<yourCloudFunctionsAPIKey>"
+      }
+    },
+    "Alarmonoff": "off",
+    "app_action": ""
+  }
+}
+
+******************* Step 36 ********************
+{
+  "output": {
+    "generic": [
+      {
+        "values": [
+          {
+            "text": "Great, I have a table of $number people, on $date at $time at our $locations store."
+          }
+        ],
+        "response_type": "text",
+        "selection_policy": "sequential"
+      }
+    ]
+  },
+  "actions": [
+    {
+      "name": "/<your-namespace>/actions/Bluemix_cfworkshopdb_workshopkey/create-document",
+      "type": "server",
+      "parameters": {
+        "doc": {
+          "date": "$date",
+          "time": "$time",
+          "number": "$number",
+          "locations": "$locations"
+        },
+        "dbname": "reservations"
+      },
+      "credentials": "$private.my_credentials",
+      "result_variable": "$my_result"
+    }
+  ]
+}
+
+Important: replace <your-namespace> with your actual namespace from step 28
